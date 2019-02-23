@@ -103,7 +103,52 @@ module.exports = {
 postcss --use autoprefixer -c optoins.json -o main.css/*.css
 ```
 
-```
+```js
+// walkRules()
+const selectors = []
+root.walkRules(rule => {
+  selectors.push(rule.selector)
+})
+console.log(`Your CSS uses ${ selectors.length } selectors`)
+
+
+root.walkDecls(decl => {
+  checkPropertySupport(decl.prop)
+})
+
+root.walkDecls('border-redius', decl => {
+  decl.remove()
+})
+
+root.walkDecls(/^background/, decl => {
+  decl.value = takeFirstColorFromGradient(decl.value)
+})
+
+root.walkComments(comments => {
+  comment.remove()
+})
+
+root.walkAtRules(rule => {
+  if (isOld(rule.name)) rule.remove()
+})
+
+let first = false
+root.walkAtRules('charset', rule => {
+  if (!first) {
+    first = true
+  } else {
+    rule.remove()
+  }
+})
+
+root.walk(node => {
+})
+
+const hasPrefix = rule.some(i => i.prop[0] === '-')
+
+root.replaceValues(/\d+rem/, { fast: 'rem' }, string => {
+  return 15 * parseInt(string) + 'px'
+})
 ```
 
 ```
